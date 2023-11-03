@@ -1,0 +1,15 @@
+{
+    "name": "gturpin/poc_wpcli_maker_theme",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+			"Whodunit\\Framework\\": "framework/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Guillaume Turpin"
+        }
+    ],
+    "require": {}
+}
