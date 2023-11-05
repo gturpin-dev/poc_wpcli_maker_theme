@@ -44,6 +44,11 @@ abstract class BaseCommand extends \WP_CLI_Command {
 	 * @return void
 	 */
 	public function __invoke( array $args, array $assoc_args ): void {
-		$this->handle( $args, $assoc_args );
+		try {
+			$this->handle( $args, $assoc_args );
+		} catch ( \Exception $e ) {
+			\WP_CLI::error( get_class( $e ) . ' : ' . $e->getMessage() );
+			die;
+		}
 	}
 }

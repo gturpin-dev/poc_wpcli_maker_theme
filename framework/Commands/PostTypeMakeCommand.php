@@ -2,6 +2,7 @@
 
 namespace Whodunit\Framework\Commands;
 
+use InvalidArgumentException;
 use Whodunit\Framework\Commands\GeneratorCommand;
 
 /**
@@ -31,7 +32,7 @@ final class PostTypeMakeCommand extends GeneratorCommand {
 		$post_type_to_create = $args[0] ?? null;
 		
 		if ( ! $post_type_to_create ) {
-			\WP_CLI::error( 'You must provide a post type name !' );
+			throw new \InvalidArgumentException( 'You must provide a post type name !' );
 		}
 
 		// Get the stub file and the destination file
