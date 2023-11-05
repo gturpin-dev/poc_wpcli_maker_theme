@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Whodunit\Framework\Concerns\PostType;
+
 /**
  * The model for the Dummy post type
  */
-final class DummyPostType {
+final class DummyPostType implements PostType {
 
 	/**
 	 * The slug of the post type

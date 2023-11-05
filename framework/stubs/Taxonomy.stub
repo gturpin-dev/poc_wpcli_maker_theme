@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Whodunit\Framework\Concerns\Taxonomy;
+
 /**
  * The model for the Dummy taxonomy
  */
-final class DummyTaxonomy {
+final class DummyTaxonomy implements Taxonomy {
 
 	/**
 	 * The slug of the taxonomy
