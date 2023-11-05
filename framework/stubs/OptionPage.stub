@@ -13,7 +13,7 @@ final class DummyOptionPage implements OptionPage {
 	/**
 	 * Whether to use ACF to create the option page
 	 */
-	protected static bool $_USE_ACF = true;
+	protected static bool $_USE_ACF = dummy_use_acf;
 
 	/**
 	 * The slug of the option page

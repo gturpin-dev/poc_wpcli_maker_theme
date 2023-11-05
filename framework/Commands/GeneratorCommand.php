@@ -54,6 +54,15 @@ abstract class GeneratorCommand extends BaseCommand {
 	protected string $destination_file;
 
 	/**
+	 * The list of named arguments from the command line
+	 * Eg: wp whostarter make:command --name=MyCommand --force
+	 * Will give us: ['name' => 'MyCommand', 'force' => 1]
+	 *
+	 * @var array<string>
+	 */
+	protected array $assoc_args;
+
+	/**
 	 * The code called when the command is executed
 	 * 
 	 * @param array $args The list of arguments
@@ -66,7 +75,8 @@ abstract class GeneratorCommand extends BaseCommand {
 	protected function handle( array $args, array $assoc_args ) : void {
 		// We need an Object name to create a class
 		$object_to_create = ucfirst( $args[0] ?? '' );
-		
+		$this->assoc_args = $assoc_args;
+
 		if ( empty( $object_to_create ) ) {
 			throw new \InvalidArgumentException( 'You must provide a post type name !' );
 		}
