@@ -4,6 +4,9 @@ namespace Whodunit\Framework\Commands;
 
 use Whodunit\Framework\Commands\GeneratorCommand;
 
+/**
+ * The command responsible for creating a new post type in the right place
+ */
 final class PostTypeMakeCommand extends GeneratorCommand {
 
 	/**

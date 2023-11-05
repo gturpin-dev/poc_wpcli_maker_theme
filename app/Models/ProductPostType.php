@@ -1,0 +1,89 @@
+<?php
+
+namespace App\Models;
+
+/**
+ * The model for the Product post type
+ */
+final class ProductPostType {
+
+	/**
+	 * The slug of the post type
+	 */
+	public const SLUG = 'product';
+
+	/**
+	 * Register the post type hooks
+	 *
+	 * @return void
+	 */
+	public static function register() : void {
+		add_action( 'init', [ self::class, 'register_post_type' ] );
+	}
+
+	/**
+	 * Defines the labels for the post type
+	 * 
+	 * @link https://developer.wordpress.org/reference/functions/get_post_type_labels/
+	 *
+	 * @return array<string, string> The labels
+	 */
+	protected static function labels() : array {
+		return [
+			'name'               => _x( 'DummyPluralName', 'Post type general name', 'dummy_textdomain' ),
+			'singular_name'      => _x( 'DummySingularName', 'Post type singular name', 'dummy_textdomain' ),
+			'menu_name'          => _x( 'DummyPluralName', 'Admin Menu text', 'dummy_textdomain' ),
+			'name_admin_bar'     => _x( 'DummySingularName', 'Add New on Toolbar', 'dummy_textdomain' ),
+			'all_items'          => __( 'DummyPluralName', 'dummy_textdomain' ),
+			'add_new'            => __( 'Add New', 'dummy_textdomain' ),
+			'add_new_item'       => __( 'Add New DummySingularName', 'dummy_textdomain' ),
+			'edit_item'          => __( 'Edit DummySingularName', 'dummy_textdomain' ),
+			'new_item'           => __( 'New DummySingularName', 'dummy_textdomain' ),
+			'view_item'          => __( 'View DummySingularName', 'dummy_textdomain' ),
+			'view_items'         => __( 'View DummyPluralName', 'dummy_textdomain' ),
+			'search_items'       => __( 'Search DummyPluralName', 'dummy_textdomain' ),
+			'not_found'          => __( 'No DummyPluralName found.', 'dummy_textdomain' ),
+			'not_found_in_trash' => __( 'No DummyPluralName found in Trash.', 'dummy_textdomain' ),
+			'parent_item_colon'  => __( 'Parent DummySingularName:', 'dummy_textdomain' ),
+		];
+	}
+
+	/**
+	 * Defines the options for the post type
+	 * 
+	 * @link https://developer.wordpress.org/reference/functions/register_post_type/#parameters
+	 *
+	 * @return array<string, mixed> The options
+	 */
+	protected static function options() : array {
+		return [
+			'labels'  => self::labels(),
+			'public'  => true,
+			'rewrite' => [
+				'slug' => self::SLUG,
+			],
+			'menu_position'   => 6,
+			'capability_type' => 'post',
+			'has_archive'     => true,
+			'hierarchical'    => false,
+			'menu_icon'       => 'dashicons-admin-generic',
+			'show_in_rest'    => true,
+			'supports'        => [
+				'title',
+				'editor',
+				'thumbnail',
+				'excerpt',
+				'revisions'
+			],
+		];
+	}
+	
+	/**
+	 * Register the post type
+	 *
+	 * @return void
+	 */
+	public static function register_post_type() : void {
+		\register_post_type( self::SLUG, self::options() );
+	}
+}

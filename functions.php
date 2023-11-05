@@ -23,3 +23,11 @@ add_action( 'cli_init', function() {
 		\WP_CLI::add_command( $command::$_COMMAND_NAME, $command );
 	}
 } );
+
+
+// Load all post types @TODO must be moved to a separate file in framework
+$post_types_to_load = require_once __DIR__ . '/config/post_types.php';
+
+foreach ( $post_types_to_load as $post_type ) {
+	$post_type::register();
+}
