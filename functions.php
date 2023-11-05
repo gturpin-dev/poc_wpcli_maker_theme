@@ -31,3 +31,10 @@ $post_types_to_load = require_once __DIR__ . '/config/post_types.php';
 foreach ( $post_types_to_load as $post_type ) {
 	$post_type::register();
 }
+
+// Load all taxonomies @TODO must be moved to a separate file in framework
+$taxonomies_to_load = require_once __DIR__ . '/config/taxonomies.php';
+
+foreach ( $taxonomies_to_load as $post_type ) {
+	$post_type::register();
+}

@@ -19,7 +19,7 @@ final class DummyPostType {
 	protected const DASHICON = 'dashicons-admin-generic';
 
 	/**
-	 * Register the post type hooks
+	 * Register the post type related hooks
 	 *
 	 * @return void
 	 */

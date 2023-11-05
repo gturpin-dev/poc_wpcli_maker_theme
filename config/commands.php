@@ -1,6 +1,7 @@
 <?php
 
 use Whodunit\Framework\Commands\PostTypeMakeCommand;
+use Whodunit\Framework\Commands\TaxonomyMakeCommand;
 
 /**
  * Put your commands classnames here to be loaded by the framework
@@ -8,4 +9,5 @@ use Whodunit\Framework\Commands\PostTypeMakeCommand;
  */
 return [
 	PostTypeMakeCommand::class,
+	TaxonomyMakeCommand::class
 ];

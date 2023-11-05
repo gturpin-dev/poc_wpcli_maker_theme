@@ -1,0 +1,88 @@
+<?php
+
+namespace App\Models;
+
+/**
+ * The model for the Dummy taxonomy
+ */
+final class DummyTaxonomy {
+
+	/**
+	 * The slug of the taxonomy
+	 */
+	public const SLUG = 'dummy';
+
+	/**
+	 * The related post types of the taxonomy
+	 *
+	 * @var array<string>
+	 */
+	public static array $related_post_types = [
+		PostPostType::SLUG,
+	];
+	
+	/**
+	 * Register the taxonomy related hooks
+	 *
+	 * @return void
+	 */
+	public static function register() : void {
+		add_action( 'init', [ self::class, 'register_taxonomy' ] );
+	}
+
+	/**
+	 * Defines the labels for the taxonomy
+	 * 
+	 * @link https://developer.wordpress.org/reference/functions/get_taxonomy_labels/
+	 *
+	 * @return array<string, string> The labels
+	 */
+	protected static function labels() : array {
+		return [
+			'name'                       => __( 'DummyPluralName', 'dummy_textdomain' ),
+			'singular_name'              => __( 'DummySingularName', 'dummy_textdomain' ),
+			'menu_name'                  => __( 'DummyPluralName', 'dummy_textdomain' ),
+			'all_items'                  => __( 'All DummyPluralName', 'dummy_textdomain' ),
+			'edit_item'                  => __( 'Edit DummySingularName', 'dummy_textdomain' ),
+			'view_item'                  => __( 'View DummySingularName', 'dummy_textdomain' ),
+			'update_item'                => __( 'Update DummySingularName', 'dummy_textdomain' ),
+			'add_new_item'               => __( 'Add New DummySingularName', 'dummy_textdomain' ),
+			'new_item_name'              => __( 'New DummySingularName Name', 'dummy_textdomain' ),
+			'parent_item'                => __( 'Parent DummyPluralName', 'dummy_textdomain' ),
+			'parent_item_colon'          => __( 'Parent DummyPluralName', 'dummy_textdomain' ),
+			'search_items'               => __( 'Search DummyPluralName', 'dummy_textdomain' ),
+			'popular_items'              => __( 'Popular DummyPluralName', 'dummy_textdomain' ),
+			'separate_items_with_commas' => __( 'Seperate DummyPluralName with commas', 'dummy_textdomain' ),
+			'add_or_remove_items'        => __( 'Add or remove DummyPluralName', 'dummy_textdomain' ),
+			'choose_from_most_used'      => __( 'Choose from most used DummyPluralName', 'dummy_textdomain' ),
+			'not_found'                  => __( 'No DummyPluralName found', 'dummy_textdomain' ),
+		];
+	}
+
+	/**
+	 * Defines the options for the taxonomy
+	 * 
+	 * @link https://developer.wordpress.org/reference/functions/register_taxonomy/#parameters
+	 *
+	 * @return array<string, mixed> The options
+	 */
+	protected static function options() : array {
+		return [
+			'labels'            => self::labels(),
+			'hierarchical'      => true,
+			'show_admin_column' => true,
+			'rewrite'           => [
+				'slug' => self::SLUG,
+			],
+		];
+	}
+	
+	/**
+	 * Register the taxonomy
+	 *
+	 * @return void
+	 */
+	public static function register_taxonomy() : void {
+		\register_taxonomy( self::SLUG, self::$related_post_types, self::options() );
+	}
+}
