@@ -19,3 +19,16 @@ wp whostarter make:taxonomy
 
 Cela aura pour effet de créer un nouveau fichier dans le dossier `app/Models` qui contiendra la définition de la Taxonomy.  
 Ensuite il faudra aller register cette nouvelle classe dans le fichier `config/taxonomies.php` et la Taxonomy sera automatiquement register par le thème.
+
+## Créer une nouvelle Page d'Options
+
+Pour créer une nouvelle Page d'Options il suffit d'utiliser la commande wp-cli associée :
+
+```bash
+wp whostarter make:options-page
+```
+
+Cela aura pour effet de créer un nouveau fichier dans le dossier `app/OptionPages` qui contiendra la définition de la Page d'Options.  
+Ensuite il faudra aller register cette nouvelle classe dans le fichier `config/options_pages.php` et la Page d'Options sera automatiquement register par le thème.  
+
+Il est possible de générer une page d'options sans ACF en ajoutant l'option `--acf=false` à la commande. ( true étant la valeur par défaut )
