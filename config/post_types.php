@@ -9,5 +9,5 @@ use App\Models\ProductPostType;
 return [
 	// 'App\PostTypes\MyCustomPostType',
 	// MyCustomPostType::class,
-	ProductPostType::class,
+	// ProductPostType::class,
 ];

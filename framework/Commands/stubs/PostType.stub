@@ -3,14 +3,20 @@
 namespace App\Models;
 
 /**
- * The model for the Product post type
+ * The model for the Dummy post type
  */
-final class ProductPostType {
+final class DummyPostType {
 
 	/**
 	 * The slug of the post type
 	 */
-	public const SLUG = 'product';
+	public const SLUG = 'dummy';
+	
+	/**
+	 * The dashicon for the post type
+	 * @link https://developer.wordpress.org/resource/dashicons/
+	 */
+	protected const DASHICON = 'dashicons-admin-generic';
 
 	/**
 	 * Register the post type hooks
@@ -66,7 +72,7 @@ final class ProductPostType {
 			'capability_type' => 'post',
 			'has_archive'     => true,
 			'hierarchical'    => false,
-			'menu_icon'       => 'dashicons-admin-generic',
+			'menu_icon'       => self::DASHICON,
 			'show_in_rest'    => true,
 			'supports'        => [
 				'title',
