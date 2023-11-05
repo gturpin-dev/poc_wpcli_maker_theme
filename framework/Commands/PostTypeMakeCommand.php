@@ -18,6 +18,48 @@ final class PostTypeMakeCommand extends GeneratorCommand {
 	public static ?string $_COMMAND_NAME = 'whostarter make:post-type';
 
 	/**
+	 * The Object to create without suffix
+	 *
+	 * @var string|null
+	 */
+	protected ?string $object_to_create = null;
+
+	/**
+	 * The class to create with suffix
+	 *
+	 * @var string|null
+	 */
+	protected ?string $class_to_create = null;
+
+	/**
+	 * The class suffix to add to the class name
+	 *
+	 * @var string
+	 */
+	protected string $class_suffix = 'PostType';
+
+	/**
+	 * The source file full path and name to copy
+	 *
+	 * @var string|null
+	 */
+	protected ?string $source_file = null;
+
+	/**
+	 * The destination path
+	 *
+	 * @var string|null
+	 */
+	protected ?string $destination_path = null;
+
+	/**
+	 * The destination file full path and name
+	 *
+	 * @var string|null
+	 */
+	protected ?string $destination_file = null;
+
+	/**
 	 * The code called when the command is executed
 	 * 
 	 * @param array $args The list of arguments
@@ -29,71 +71,139 @@ final class PostTypeMakeCommand extends GeneratorCommand {
 	 */
 	protected function handle( array $args, array $assoc_args ) : void {
 		// We need a post type name to create a post type
-		$post_type_to_create = $args[0] ?? null;
+		$post_type_to_create = ucfirst( $args[0] ?? '' );
 		
-		if ( ! $post_type_to_create ) {
+		if ( empty( $post_type_to_create ) ) {
 			throw new \InvalidArgumentException( 'You must provide a post type name !' );
 		}
 
-		// Get the stub file and the destination file
-		$source_file           = $this->get_source_file();
-		$destination_path      = $this->get_destination_path();
-		$destination_classname = $this->get_destination_classname( $post_type_to_create );
-		$destination_file      = $destination_path . $destination_classname . '.php';
+		// Set the properties for the command
+		$this->object_to_create = $post_type_to_create;
+		// $this->class_to_create  = $post_type_to_create . $this->class_suffix;
+		$this->set_object_to_create( $post_type_to_create );
+		$this->set_class_to_create();
+		$this->set_source_file();
+		$this->set_destination_path();
+		$this->set_destination_file();
 
-		// If destination folder does not exist, create it
-		if ( ! file_exists( $destination_path ) ) {
-			mkdir( $destination_path, 0777, true );
-		}
-
-		// If destination file already exists, throw an error
-		if ( file_exists( $destination_file ) ) {
-			\WP_CLI::error( sprintf( 'Post type "%s" already exists !', $post_type_to_create ) );
-		}
-		
-		// Copy the stub file to the destination file
-		copy( $source_file, $destination_file );
-
-		// Replace the Dummy stubs with the actual class name based strings
-		$destination_file_content = file_get_contents( $destination_file );
-		$destination_file_content = preg_replace( '/\bDummyPostType\b/', $destination_classname, $destination_file_content );
-		$destination_file_content = preg_replace( '/\bDummy\b/', $post_type_to_create, $destination_file_content );
-		$destination_file_content = preg_replace( '/\bdummy\b/', strtolower( $post_type_to_create ), $destination_file_content );
-		$destination_file_content = preg_replace( '/\bDummyPluralName\b/', $post_type_to_create . 'PluralName', $destination_file_content );
-		$destination_file_content = preg_replace( '/\bDummySingularName\b/', $post_type_to_create . 'SingularName', $destination_file_content );
-		file_put_contents( $destination_file, $destination_file_content );
-		
-		$display_path = str_replace( \get_template_directory() . '/', '', $destination_file );
-		\WP_CLI::success( sprintf( 'Post type "%s" created successfully at "%s" !', $post_type_to_create, $display_path ) );
-		\WP_CLI::log( sprintf( 'You must now enqueue the newly created post type "%s" in the "config/post_types.php" file !', $post_type_to_create ) );
+		// Create the Object based on the stub file
+		$this->maybe_create_destination_folder();
+		$this->check_destination_file_exists();
+		$this->copy_stub_to_destination();
+		$this->replace_stubs_in_destination();
+		$this->display_success_message();
 	}
 
 	/**
-	 * Get the source file
+	 * Maybe create the destination folder if it does not exist
 	 *
-	 * @return string The source file
+	 * @return void
 	 */
-	protected function get_source_file() : string {
-		return \get_template_directory() . '/framework/stubs/PostType.stub';
+	protected function maybe_create_destination_folder() : void {
+		if ( ! file_exists( $this->destination_path ) ) {
+			mkdir( $this->destination_path, 0777, true );
+		}
 	}
 
 	/**
-	 * Get the destination path
+	 * Check if the destination file already exists and throw an error if it does
 	 *
-	 * @return string The destination path
+	 * @throws InvalidArgumentException If the destination file already exists
+	 *
+	 * @return void
 	 */
-	protected function get_destination_path() : string {
-		return \get_template_directory() . '/app/Models/';
+	protected function check_destination_file_exists() : void {
+		if ( file_exists( $this->destination_file ) ) {
+			throw new \InvalidArgumentException( sprintf( 'Post type "%s" already exists !', $this->object_to_create ) );
+		}
 	}
 
 	/**
-	 * Get the destination classname
-	 *
-	 * @param string $post_type_to_create The post type to create
+	 * Copy the stub file to the destination file
 	 * 
-	 * @return string The destination classname
+	 * @throws Exception If the copy is not successful
+	 *
+	 * @return void
 	 */
-	protected function get_destination_classname( string $post_type_to_create ) : string {
-		return ucfirst( $post_type_to_create ) . 'PostType';
+	protected function copy_stub_to_destination() : void {
+		$is_successful = copy( $this->source_file, $this->destination_file );
+
+		if ( ! $is_successful ) {
+			throw new \Exception( sprintf( 'Could not copy the stub file "%s" to the destination file "%s" !', $this->source_file, $this->destination_file ) );
+		}
+	}
+
+	/**
+	 * Replace the Dummy stubs with the actual class name based strings
+	 *
+	 * @return void
+	 */
+	protected function replace_stubs_in_destination() : void {
+		$destination_file_content = file_get_contents( $this->destination_file );
+		$destination_file_content = preg_replace( '/\bDummyPostType\b/', $this->class_to_create, $destination_file_content );
+		$destination_file_content = preg_replace( '/\bDummy\b/', $this->object_to_create, $destination_file_content );
+		$destination_file_content = preg_replace( '/\bdummy\b/', strtolower( $this->object_to_create ), $destination_file_content );
+		$destination_file_content = preg_replace( '/\bDummyPluralName\b/', $this->object_to_create . 'PluralName', $destination_file_content );
+		$destination_file_content = preg_replace( '/\bDummySingularName\b/', $this->object_to_create . 'SingularName', $destination_file_content );
+		file_put_contents( $this->destination_file, $destination_file_content );
+	}
+
+	/**
+	 * Display a success message when everything is done
+	 *
+	 * @return void
+	 */
+	protected function display_success_message() : void {
+		$display_path = str_replace( \get_template_directory() . '/', '', $this->destination_file );
+
+		\WP_CLI::success( sprintf( 'Post type "%s" created successfully at "%s" !', $this->object_to_create, $display_path ) );
+		\WP_CLI::log( sprintf( 'You must now enqueue the newly created post type "%s" in the "config/post_types.php" file !', $this->object_to_create ) );
+	}
+	
+	/**
+	 * Set the object to create
+	 *
+	 * @param string $object_to_create The object name to create
+	 *
+	 * @return void
+	 */
+	protected function set_object_to_create( string $object_to_create ) : void {
+		$this->object_to_create = $object_to_create;
+	}
+	
+	/**
+	 * Set the full class name to create
+	 *
+	 * @return void
+	 */
+	protected function set_class_to_create() : void {
+		$this->class_to_create = $this->object_to_create . $this->class_suffix;
+	}
+
+	/**
+	 * Set the source file for the generator command
+	 *
+	 * @return void
+	 */
+	protected function set_source_file() : void {
+		$this->source_file = \get_template_directory() . '/framework/stubs/PostType.stub';
+	}
+
+	/**
+	 * Set the destination path for the generator command
+	 *
+	 * @return void
+	 */
+	protected function set_destination_path() : void {
+		$this->destination_path = \get_template_directory() . '/app/Models/';
+	}
+
+	/**
+	 * Set the destination file for the generator command
+	 *
+	 * @return void
+	 */
+	protected function set_destination_file() : void {
+		$this->destination_file = $this->destination_path . $this->class_to_create . '.php';
 	}
 }
