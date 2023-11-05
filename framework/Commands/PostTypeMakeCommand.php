@@ -14,7 +14,7 @@ final class PostTypeMakeCommand extends GeneratorCommand {
 	 * 
 	 * @var string|null
 	 */
-	public static ?string $_COMMAND_NAME = 'whodunit make:post-type';
+	public static ?string $_COMMAND_NAME = 'whostarter make:post-type';
 
 	/**
 	 * The code called when the command is executed
@@ -27,16 +27,9 @@ final class PostTypeMakeCommand extends GeneratorCommand {
 	 * @return void
 	 */
 	protected function handle( array $args, array $assoc_args ) : void {
-		// The command class must redeclare the source_file property and set it to the source stub file
-		// The command class must redeclare the target_file property and set it to the destination file
-		// Rename the stub file to the destination file
-		// Replace all namespace placeholders "dummy" in the destination file with the namespace
-		// Replace all class name placeholders "Dummy" in the destination file with the class name
-		// Set a message to be displayed in the console to tell the user to enqueue the new PostType
-
 		// We need a post type name to create a post type
 		$post_type_to_create = $args[0] ?? null;
-
+		
 		if ( ! $post_type_to_create ) {
 			\WP_CLI::error( 'You must provide a post type name !' );
 		}
@@ -69,9 +62,9 @@ final class PostTypeMakeCommand extends GeneratorCommand {
 		$destination_file_content = preg_replace( '/\bDummySingularName\b/', $post_type_to_create . 'SingularName', $destination_file_content );
 		file_put_contents( $destination_file, $destination_file_content );
 		
-		$display_path = str_replace( \get_template_directory(), '', $destination_file );
-		$display_path = ltrim( $display_path, '/' );
+		$display_path = str_replace( \get_template_directory() . '/', '', $destination_file );
 		\WP_CLI::success( sprintf( 'Post type "%s" created successfully at "%s" !', $post_type_to_create, $display_path ) );
+		\WP_CLI::log( sprintf( 'You must now enqueue the newly created post type "%s" in the "config/post_types.php" file !', $post_type_to_create ) );
 	}
 
 	/**
@@ -80,7 +73,7 @@ final class PostTypeMakeCommand extends GeneratorCommand {
 	 * @return string The source file
 	 */
 	protected function get_source_file() : string {
-		return __DIR__ . '/stubs/PostType.stub';
+		return \get_template_directory() . '/framework/stubs/PostType.stub';
 	}
 
 	/**
