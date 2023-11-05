@@ -1,6 +1,5 @@
 <?php
 
-use Whodunit\Framework\Commands\BaseCommand;
 use Whodunit\Framework\Services\ConfigLoader;
 
 // Load autoloader

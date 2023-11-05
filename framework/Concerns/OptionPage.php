@@ -3,13 +3,13 @@
 namespace Whodunit\Framework\Concerns;
 
 /**
- * Interface to be implemented by all taxonomies
+ * Interface to be implemented by all option pages
  * used by the framework
  */
-interface Taxonomy {
+interface OptionPage {
 
 	/**
-	 * Register the taxonomy
+	 * Register the option page
 	 */
 	public static function register() : void;
 }

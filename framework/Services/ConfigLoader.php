@@ -4,6 +4,7 @@ namespace Whodunit\Framework\Services;
 
 use Whodunit\Framework\Concerns\PostType;
 use Whodunit\Framework\Concerns\Taxonomy;
+use Whodunit\Framework\Concerns\OptionPage;
 use Whodunit\Framework\Commands\BaseCommand;
 
 /**
@@ -39,10 +40,11 @@ final class ConfigLoader {
 
 		// Load the config file based on the filename
 		match ( $filename ) {
-			'commands'   => add_action( 'cli_init', fn () => self::load_commands( $file ) ),
-			'post_types' => self::load_post_types( $file ),
-			'taxonomies' => self::load_taxonomies( $file ),
-			default      => null,
+			'commands'     => add_action( 'cli_init', fn () => self::load_commands( $file ) ),
+			'post_types'   => self::load_post_types( $file ),
+			'taxonomies'   => self::load_taxonomies( $file ),
+			'option_pages' => self::load_option_pages( $file ),
+			default        => null,
 		};
 	}
 
@@ -55,11 +57,12 @@ final class ConfigLoader {
 		// Bail if not in a WP_CLI context
 		if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) return;
 		
-		// Ensure that all commands are commands
 		$commands_to_load = require_once $file ?? [];
-		$commands_to_load = array_filter( $commands_to_load, fn ( $command ) => is_subclass_of( $command, BaseCommand::class ) );
-
 		foreach ( $commands_to_load as $command ) {
+			if ( ! is_subclass_of( $command, BaseCommand::class ) ) {
+				throw new \TypeError( sprintf( 'The Command "%s" must be a valid Command', $command ) );
+			}
+
 			\WP_CLI::add_command( $command::$_COMMAND_NAME, $command );
 		}
 	}
@@ -95,6 +98,23 @@ final class ConfigLoader {
 			}
 			
 			$taxonomy::register();
+		}
+	}
+
+	/**
+	 * Load the option pages config file
+	 *
+	 * @param string $file The path to the config file
+	 */
+	private static function load_option_pages( string $file ) : void {
+		$option_pages_to_load = require_once $file ?? [];
+
+		foreach ( $option_pages_to_load as $option_page ) {
+			if ( ! is_subclass_of( $option_page, OptionPage::class ) ) {
+				throw new \TypeError( sprintf( 'The Option Page "%s" must be a valid Option Page', $option_page ) );
+			}
+			
+			$option_page::register();
 		}
 	}
 }

@@ -1,0 +1,132 @@
+<?php
+
+namespace App\OptionPages;
+
+use Whodunit\Framework\Enums\BuiltInMenuSlugs;
+use Whodunit\Framework\Concerns\OptionPage;
+
+/**
+ * The model for the Dummy Option Page
+ */
+final class DummyOptionPage implements OptionPage {
+	
+	/**
+	 * Whether to use ACF to create the option page
+	 */
+	protected static bool $_USE_ACF = true;
+
+	/**
+	 * The slug of the option page
+	 */
+	protected static string $_SLUG = 'dummy-option-page';
+
+	/**
+	 * The slug of the parent option page
+	 * If null, the option page will be a top-level menu
+	 * 
+	 * @var string|BuiltInMenuSlugs The slug of the parent option page or the BuiltInMenuSlugs enum
+	 * @example BuiltInMenuSlugs::SETTINGS for a subpage of the Settings menu
+	 */
+	protected static string|BuiltInMenuSlugs|null $_PARENT_SLUG = null;
+
+	/**
+	 * The dashicon of the option page
+	 * This has no effect if the parent slug is null
+	 * 
+	 * @link https://developer.wordpress.org/resource/dashicons/
+	 * @var string
+	 */
+	protected static string $_DASHICON = 'dashicons-admin-generic';
+
+	/**
+	 * The position of the option page
+	 *
+	 * @link https://developer.wordpress.org/reference/functions/add_menu_page/#menu-structure For the position of the menu, works either for top-level or subpages
+	 * @var integer
+	 */
+	protected static int $_POSITION = 85;
+	
+	/**
+	 * Register the option pages related hooks
+	 *
+	 * @return void
+	 */
+	public static function register() : void {
+		add_action( 'admin_menu', [ self::class, 'register_option_page' ] );
+	}
+
+	/**
+	 * Register the option page
+	 * 
+	 * @link https://developer.wordpress.org/reference/functions/add_submenu_page
+	 * @link https://www.advancedcustomfields.com/resources/acf_add_options_page/
+	 *
+	 * @return void
+	 */
+	public static function register_option_page() : void {
+		if ( self::$_USE_ACF && function_exists( 'acf_add_options_page' ) ) {
+			acf_add_options_page( [
+				'page_title'  => self::get_page_title(),
+				'menu_title'  => self::get_page_title(),
+				'menu_slug'   => self::$_SLUG,
+				'capability'  => 'edit_posts',
+				'position'    => self::$_POSITION,
+				'parent_slug' => self::get_parent_slug() ?? '',
+				'icon_url'    => self::$_DASHICON,
+				'redirect'    => true,
+			] );
+		} else {
+			// If the parent slug is null, the option page will be a top-level menu
+			if ( is_null( self::$_PARENT_SLUG ) ) {
+				add_menu_page(
+					self::get_page_title(),
+					self::get_page_title(),
+					'edit_posts',
+					self::$_SLUG,
+					[ self::class, 'render_option_page' ],
+					self::$_DASHICON,
+					self::$_POSITION
+				);
+			} else {
+				add_submenu_page(
+					self::get_parent_slug(),
+					self::get_page_title(),
+					self::get_page_title(),
+					'edit_posts',
+					self::$_SLUG,
+					[ self::class, 'render_option_page' ],
+					self::$_POSITION
+				);
+			}
+		}
+	}
+
+	/**
+	 * Render the option page
+	 *
+	 * @return void
+	 */
+	public static function render_option_page() : void {}
+
+	/**
+	 * Get the page title of the option page
+	 *
+	 * @return string
+	 */
+	protected static function get_page_title() : string {
+		return __( 'Dummy Option Page', 'dummy_textdomain' );
+	}
+
+	/**
+	 * Get the slug of the parent option page
+	 *
+	 * @return ?string
+	 */
+	protected static function get_parent_slug() : ?string {
+		if ( self::$_PARENT_SLUG instanceof BuiltInMenuSlugs ) {
+			return self::$_PARENT_SLUG->value;
+		}
+
+		return self::$_PARENT_SLUG;
+	}
+}
