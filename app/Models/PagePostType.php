@@ -3,7 +3,7 @@
 namespace App\Models;
 
 /**
- * The model for the native Page post type
+ * The model for the built-in Page post type
  */
 final class PagePostType {
 

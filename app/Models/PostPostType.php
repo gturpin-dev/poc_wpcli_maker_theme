@@ -3,7 +3,7 @@
 namespace App\Models;
 
 /**
- * The model for the native Post post type
+ * The model for the built-in Post post type
  */
 final class PostPostType {
 
