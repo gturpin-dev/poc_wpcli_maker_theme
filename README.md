@@ -32,3 +32,12 @@ Cela aura pour effet de créer un nouveau fichier dans le dossier `app/OptionPag
 Ensuite il faudra aller register cette nouvelle classe dans le fichier `config/options_pages.php` et la Page d'Options sera automatiquement register par le thème.  
 
 Il est possible de générer une page d'options sans ACF en ajoutant l'option `--acf=false` à la commande. ( true étant la valeur par défaut )
+
+## TODO
+
+Lors des commandes makes avec labels | aller chercher le textdomain du style.css et le remplacer automatiquement dans les fichiers générés
+
+Voir pour installer nativement le .phar && intégration avec npm pour retomber sur la commande cli
+exemple : "make:post-type" => "wp-cli.phar whostarter make:post-type",
+
+Checker l'issue avec le parent slug lorsque l'on cite directement le slug d'une autre OptionPage 
