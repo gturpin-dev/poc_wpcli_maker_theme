@@ -7,8 +7,7 @@
 	"get-wpcli": "curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar",
 	"make:post-type": "php wp-cli.phar whostarter make:post-type",
 	"make:taxonomy": "php wp-cli.phar whostarter make:taxonomy",
-	"make:option-page": "php wp-cli.phar whostarter make:option-page",
-	"test": "php wp-cli.phar plugin list"
+	"make:option-page": "php wp-cli.phar whostarter make:option-page"
   },
   "author": "",
   "license": "ISC"

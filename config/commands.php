@@ -11,5 +11,5 @@ use Whodunit\Framework\Commands\TaxonomyMakeCommand;
 return [
 	PostTypeMakeCommand::class,
 	TaxonomyMakeCommand::class,
-	OptionPageMakeCommand::class,
+	// OptionPageMakeCommand::class,
 ];
