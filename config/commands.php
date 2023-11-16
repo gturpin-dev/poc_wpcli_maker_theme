@@ -1,6 +1,5 @@
 <?php
 
-use Whodunit\Framework\Commands\OptionPageMakeCommand;
 use Whodunit\Framework\Commands\PostTypeMakeCommand;
 use Whodunit\Framework\Commands\TaxonomyMakeCommand;
 
@@ -9,7 +8,7 @@ use Whodunit\Framework\Commands\TaxonomyMakeCommand;
  * All commands must extend the Whodunit\Framework\Commands\Command class
  */
 return [
-	PostTypeMakeCommand::class,
-	TaxonomyMakeCommand::class,
-	// OptionPageMakeCommand::class,
+    PostTypeMakeCommand::class,
+    TaxonomyMakeCommand::class,
+    // OptionPageMakeCommand::class,
 ];

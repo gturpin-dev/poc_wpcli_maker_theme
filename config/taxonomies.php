@@ -6,8 +6,7 @@
  * All Taxonomies must be stored in app/Models folder
  * All Taxonomies must extend the Whodunit\Framework\Taxonomy class
  */
-
 return [
-	// 'App\Models\MyCustomTaxonomy',
-	// MyCustomTaxonomy::class,
+    // 'App\Models\MyCustomTaxonomy',
+    // MyCustomTaxonomy::class,
 ];

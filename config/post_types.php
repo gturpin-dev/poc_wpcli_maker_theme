@@ -9,6 +9,6 @@ use App\Models\PostPostType;
  * All Post types must extend the Whodunit\Framework\PostType class
  */
 return [
-	PostPostType::class,
-	PagePostType::class,
+    PostPostType::class,
+    PagePostType::class,
 ];
