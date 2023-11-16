@@ -7,9 +7,8 @@ namespace Whodunit\Framework\Concerns;
  * used by the framework
  */
 interface OptionPage {
-
-	/**
-	 * Register the option page
-	 */
-	public static function register() : void;
+    /**
+     * Register the option page
+     */
+    public static function register() : void;
 }

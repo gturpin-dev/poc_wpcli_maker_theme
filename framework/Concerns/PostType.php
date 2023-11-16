@@ -7,9 +7,8 @@ namespace Whodunit\Framework\Concerns;
  * used by the framework
  */
 interface PostType {
-
-	/**
-	 * Register the post type
-	 */
-	public static function register() : void;
+    /**
+     * Register the post type
+     */
+    public static function register() : void;
 }

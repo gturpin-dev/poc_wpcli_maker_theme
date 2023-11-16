@@ -7,9 +7,8 @@ namespace Whodunit\Framework\Concerns;
  * used by the framework
  */
 interface Taxonomy {
-
-	/**
-	 * Register the taxonomy
-	 */
-	public static function register() : void;
+    /**
+     * Register the taxonomy
+     */
+    public static function register() : void;
 }
