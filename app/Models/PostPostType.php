@@ -16,6 +16,5 @@ final class PostPostType implements PostType {
     /**
      * Not needed for built-in post types
      */
-    public static function register() : void {
-    }
+    public static function register() : void {}
 }
