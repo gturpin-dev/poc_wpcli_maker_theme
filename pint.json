@@ -1,0 +1,43 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "binary_operator_spaces": {
+            "operators": {
+                "=" : "align_single_space_minimal",
+                "=>": "align_single_space_minimal"
+            }
+        },
+        "spaces_inside_parentheses": {
+            "space": "single"
+        },
+        "concat_space": {
+            "spacing": "one"
+        },
+        "braces_position": {
+            "functions_opening_brace": "same_line",
+            "classes_opening_brace": "same_line"
+        },
+        "array_syntax": {
+            "syntax": "short"
+        },
+        "class_attributes_separation": {
+            "elements": {
+                "const": "only_if_meta",
+                "method": "only_if_meta",
+                "trait_import": "none",
+                "case": "none"
+            }
+        },
+        "class_definition": {
+            "single_line": true
+        },
+        "no_superfluous_phpdoc_tags": {
+            "allow_mixed": true,
+            "remove_inheritdoc": false,
+            "allow_unused_params": false
+        },
+        "return_type_declaration": {
+            "space_before": "one"
+        }
+    }
+}
