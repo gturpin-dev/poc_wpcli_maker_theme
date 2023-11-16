@@ -23,9 +23,9 @@
         "class_attributes_separation": {
             "elements": {
                 "const": "only_if_meta",
-                "method": "only_if_meta",
                 "trait_import": "none",
-                "case": "none"
+                "case": "none",
+                "method": "one"
             }
         },
         "class_definition": {

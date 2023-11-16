@@ -3,7 +3,6 @@
 namespace Whodunit\Framework\Enums\Concerns;
 
 trait EnumTrait {
-
     /**
      * @return string[]
      */
