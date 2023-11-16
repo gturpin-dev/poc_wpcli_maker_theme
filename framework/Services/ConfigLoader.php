@@ -26,7 +26,7 @@ final class ConfigLoader {
     /**
      * Load a config file
      *
-     * @param  string  $file The path to the config file
+     * @param string $file The path to the config file
      */
     private static function load_config_file( string $file ) : void {
         // Get the filename without the extension
@@ -50,7 +50,7 @@ final class ConfigLoader {
     /**
      * Load the commands config file
      *
-     * @param  string  $file The path to the config file
+     * @param string $file The path to the config file
      */
     private static function load_commands( string $file ) : void {
         // Bail if not in a WP_CLI context
@@ -71,7 +71,7 @@ final class ConfigLoader {
     /**
      * Load the post types config file
      *
-     * @param  string  $file The path to the config file
+     * @param string $file The path to the config file
      */
     private static function load_post_types( string $file ) : void {
         $post_types_to_load = require_once $file ?? [];
@@ -88,7 +88,7 @@ final class ConfigLoader {
     /**
      * Load the taxonomies config file
      *
-     * @param  string  $file The path to the config file
+     * @param string $file The path to the config file
      */
     private static function load_taxonomies( string $file ) : void {
         $taxonomies_to_load = require_once $file ?? [];
@@ -105,7 +105,7 @@ final class ConfigLoader {
     /**
      * Load the option pages config file
      *
-     * @param  string  $file The path to the config file
+     * @param string $file The path to the config file
      */
     private static function load_option_pages( string $file ) : void {
         $option_pages_to_load = require_once $file ?? [];
