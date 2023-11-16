@@ -3,6 +3,7 @@
 namespace Whodunit\Framework\Services;
 
 use Whodunit\Framework\Commands\BaseCommand;
+use Whodunit\Framework\Commands\Exceptions\UndefinedCommandNameException;
 use Whodunit\Framework\Concerns\OptionPage;
 use Whodunit\Framework\Concerns\PostType;
 use Whodunit\Framework\Concerns\Taxonomy;
@@ -58,13 +59,21 @@ final class ConfigLoader {
             return;
         }
 
-        $commands_to_load = require_once $file ?? [];
+        $commands_to_load = require_once $file;
         foreach ( $commands_to_load as $command ) {
             if ( ! is_subclass_of( $command, BaseCommand::class ) ) {
-                throw new \TypeError( sprintf( 'The Command "%s" must be a valid Command', $command ) );
+                throw new \TypeError( sprintf( 'The Command "%s" must be a valid Command', strval( $command ) ) );
             }
 
-            \WP_CLI::add_command( $command::$_COMMAND_NAME, $command );
+            if ( is_null( $command::$_COMMAND_NAME ) || empty( $command::$_COMMAND_NAME ) ) {
+                throw new UndefinedCommandNameException( sprintf( 'The Command "%s" must have a valid name', strval( $command ) ) );
+            }
+
+            // Assert to ensure that the static property is not null
+            /** @psalm-var non-empty-string */
+            $command_name = $command::$_COMMAND_NAME;
+
+            \WP_CLI::add_command( $command_name, $command );
         }
     }
 
@@ -74,7 +83,7 @@ final class ConfigLoader {
      * @param string $file The path to the config file
      */
     private static function load_post_types( string $file ) : void {
-        $post_types_to_load = require_once $file ?? [];
+        $post_types_to_load = require_once $file;
 
         foreach ( $post_types_to_load as $post_type ) {
             if ( ! is_subclass_of( $post_type, PostType::class ) ) {
@@ -91,7 +100,7 @@ final class ConfigLoader {
      * @param string $file The path to the config file
      */
     private static function load_taxonomies( string $file ) : void {
-        $taxonomies_to_load = require_once $file ?? [];
+        $taxonomies_to_load = require_once $file;
 
         foreach ( $taxonomies_to_load as $taxonomy ) {
             if ( ! is_subclass_of( $taxonomy, Taxonomy::class ) ) {
@@ -108,7 +117,7 @@ final class ConfigLoader {
      * @param string $file The path to the config file
      */
     private static function load_option_pages( string $file ) : void {
-        $option_pages_to_load = require_once $file ?? [];
+        $option_pages_to_load = require_once $file;
 
         foreach ( $option_pages_to_load as $option_page ) {
             if ( ! is_subclass_of( $option_page, OptionPage::class ) ) {
