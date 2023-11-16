@@ -11,5 +11,7 @@
             "name": "Guillaume Turpin"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "laravel/pint": "^1.13"
+    }
 }
