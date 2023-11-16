@@ -38,6 +38,7 @@
         },
         "return_type_declaration": {
             "space_before": "one"
-        }
+        },
+        "single_line_empty_body": true
     }
 }
