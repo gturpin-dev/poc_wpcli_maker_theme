@@ -2,11 +2,13 @@
 
 namespace Whodunit\Framework\Services;
 
-use Whodunit\Framework\Commands\BaseCommand;
-use Whodunit\Framework\Commands\Exceptions\UndefinedCommandNameException;
-use Whodunit\Framework\Concerns\OptionPage;
 use Whodunit\Framework\Concerns\PostType;
 use Whodunit\Framework\Concerns\Taxonomy;
+use Whodunit\Framework\Concerns\OptionPage;
+use Whodunit\Framework\Commands\BaseCommand;
+use Whodunit\Framework\Services\PostTagService;
+use Whodunit\Framework\Services\CategoryService;
+use Whodunit\Framework\Commands\Exceptions\UndefinedCommandNameException;
 
 /**
  * Load the config files
@@ -44,8 +46,29 @@ final class ConfigLoader {
             'post_types'   => self::load_post_types( $file ),
             'taxonomies'   => self::load_taxonomies( $file ),
             'option_pages' => self::load_option_pages( $file ),
+            'wordpress'    => self::load_wordpress_config( $file ),
             default        => null,
         };
+    }
+
+    /**
+     * Load the WordPress config file
+     *
+     * @param string $file The path to the config file
+     */
+    private static function load_wordpress_config( string $file ) : void {
+        $config = require_once $file;
+
+        // Call the right service to handle the features
+        $features = $config['features'] ?? [];
+        foreach ( $features as $feature => $enabled ) {
+            match ( $feature ) {
+                'enable_post_tag' => PostTagService::enable( $enabled ),
+                'enable_category' => CategoryService::enable( $enabled ),
+                'enable_comments' => CommentsService::enable( $enabled ),
+                default           => null,
+            };
+        }
     }
 
     /**
